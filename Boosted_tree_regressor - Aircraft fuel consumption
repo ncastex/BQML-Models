@@ -1,0 +1,20 @@
+CREATE OR REPLACE MODEL `your_project_id.your_dataset_id.fuel_consumption_complex_model`
+OPTIONS(model_type='BOOSTED_TREE_REGRESSOR', input_label_cols=['actual_fuel_consumed']) AS
+SELECT
+  distance_of_flight,
+  EXTRACT(DAYOFWEEK FROM flight_time) AS day_of_week,
+  EXTRACT(HOUR FROM flight_time) AS hour_of_day,
+  EXTRACT(MONTH FROM flight_time) AS month,
+  SAFE_DIVIDE(payload, aircraft_capacity) AS load_factor,  -- Compute a load factor
+  IF(weather_conditions="Strong headwinds", 1, 0) AS strong_headwinds,  -- One-hot encoding example
+  aircraft_type,
+  ML.FEATURE_CROSS(STRUCT(distance_of_flight, aircraft_type)) AS distance_aircraft_cross, -- Interaction term
+  cruise_altitude,
+  flight_route,
+  pilot_technique,
+  airport_conditions,
+  aircraft_maintenance_status,
+  fuel_type,
+  actual_fuel_consumed AS label
+FROM
+  `your_project_id.your_dataset_id.airline_data`
