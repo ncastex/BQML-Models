@@ -1,0 +1,16 @@
+CREATE OR REPLACE MODEL `your_project_id.your_dataset_id.fuel_consumption_model`
+OPTIONS(model_type='linear_reg') AS
+SELECT
+  distance_of_flight,
+  aircraft_type,
+  payload,
+  weather_conditions,
+  cruise_altitude,
+  flight_route,
+  pilot_technique,
+  airport_conditions,
+  aircraft_maintenance_status,
+  fuel_type,
+  actual_fuel_consumed AS label
+FROM
+  `your_project_id.your_dataset_id.airline_data`
